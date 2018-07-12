@@ -26,7 +26,7 @@ var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i201
 
 $(document).ready(function() {
   $("#backup").click(backup);
-  
+  console.log("1");
   if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
   } else {
@@ -40,7 +40,7 @@ $(document).ready(function() {
     reader.onload = function(e) {
       var x2js = new X2JS();
       var jsonObj = x2js.xml_str2json(reader.result);
-      alert(jsonObj);
+      alert(JSON.stringify(jsonObj));
     }
 
     reader.readAsText(file);  
