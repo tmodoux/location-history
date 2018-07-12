@@ -81,13 +81,18 @@ function parseCoordinates(place) {
   // 2. A static point (coordinates.length==1)
   //    then start and end coordinates are equal
   var start = coordinates[0].split(",");
-  console.log(coordinates[1]);
   var end = coordinates.length > 1 ? coordinates[1].split(",") : start;
-
+  
   return {
-    start: parseFloat(start),
-    end: parseFloat(end)
+    start: parseFloatArray(start),
+    end: parseFloatArray(end)
   };
+}
+
+function parseFloatArray(stringArray) {
+  return stringArray.map(function (stringElem) {
+    return parseFloat(stringElem);
+  })
 }
 
 var backup = function() {
