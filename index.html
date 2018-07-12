@@ -19,14 +19,14 @@
 <a href="#" onclick="signOut();">Sign out</a>
 <button id="backup">Backup location history</button>
 <input type="file" id="fileInput">
-<textarea id="output"></textarea>
+<div id="output"></div>
 <script>
 
 var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
 
 $(document).ready(function() {
   $("#backup").click(backup);
-  console.log("1");
+  console.log("2");
   if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
   } else {
@@ -43,7 +43,25 @@ $(document).ready(function() {
       var doc = json.kml.Document;
       var docName = doc.name;
       var placemark = doc.Placemark;
-      alert(docName);
+      
+      /* Structure of a place:
+      {
+        name,
+        address,
+        description,
+        TimeSpan: {begin, end},
+        Point: {coordinates: "x,y"} OR
+        LineString: {coordinates: "x1,y1 0 x2,y2 0 ..."}
+      }
+      */
+    }
+      placemark.forEach(function(place) {
+        if (place.Point) {
+          $("#output").append(place.Point.coordinates);
+        } else if (place.LineString) {
+          $("#output").append(place.LineString.coordinates);
+        }
+      });
     }
 
     reader.readAsText(file);  
