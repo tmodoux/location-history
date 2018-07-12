@@ -76,14 +76,16 @@ function parseCoordinates(place) {
   var coordinates = coordinatesObj.coordinates.split(",0");
   
   // Coordinates can correspond to:
-  // 1. A static point: then we only have start coordinates
-  // 2. A travel: then we extract start and end coordinates (ignore the ones inbetween)
+  // 1. A travel (coordinates.length>1)
+  //    then we extract start and end coordinates (ignore the ones inbetween)
+  // 2. A static point (coordinates.length==1)
+  //    then start and end coordinates are equal
   var start = coordinates[0].split(",");
-  var end = coordinates.length > 1 ? coordinates[1].split(",") : null;
+  var end = coordinates.length > 1 ? coordinates[1].split(",") : start;
 
   return {
-    start: start,
-    end: end
+    start: parseFloat(start),
+    end: parseFloat(end)
   };
 }
 
