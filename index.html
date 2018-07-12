@@ -76,13 +76,12 @@ function parseCoordinates(place) {
   var coordinates = coordinatesObj.coordinates.split(",0");
   
   // Coordinates can correspond to:
-  // 1. A travel (coordinates.length>1)
+  // 1. A travel: several points of coordinates along the route
   //    then we extract start and end coordinates (ignore the ones inbetween)
-  // 2. A static point (coordinates.length==1)
-  //    then start and end coordinates are equal
+  // 2. A stay: only one fixed point of coordinates
+  //    then we set end coordinates as equal to start
   var start = coordinates[0].split(",");
-  console.log(coordinates[1]);
-  var end = coordinates.length > 1 ? coordinates[1].split(",") : start;
+  var end = coordinates[1] === "" ? start: coordinates[1].split(",");
   
   return {
     start: parseFloatArray(start),
