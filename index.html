@@ -19,7 +19,7 @@
 <a href="#" onclick="signOut();">Sign out</a>
 <button id="backup">Backup location history</button>
 <input type="file" id="fileInput">
-
+<textarea id="output"></textarea>
 <script>
 
 var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
@@ -40,7 +40,7 @@ $(document).ready(function() {
     reader.onload = function(e) {
       var x2js = new X2JS();
       var jsonObj = x2js.xml_str2json(reader.result);
-      alert(JSON.stringify(jsonObj));
+      $("#output").val(JSON.stringify(jsonObj));
     }
 
     reader.readAsText(file);  
