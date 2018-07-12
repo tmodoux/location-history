@@ -83,7 +83,7 @@ function parseCoordinates(place) {
   var start = coordinates[0].split(",");
   var end = coordinates.length > 1 ? coordinates[1].split(",") : start;
   if (end==null) {
-    console.log('End is null: 'coordinates);
+    console.log("End is null: " + coordinates);
   }
   return {
     start: parseFloatArray(start),
