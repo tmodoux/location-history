@@ -38,7 +38,9 @@ $(document).ready(function() {
     var reader = new FileReader();
     // TODO: check kml type
     reader.onload = function(e) {
-      alert(reader.result);
+      var x2js = new X2JS();
+      var jsonObj = x2js.xml_str2json(reader.result);
+      alert(jsonObj);
     }
 
     reader.readAsText(file);  
