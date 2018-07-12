@@ -26,7 +26,7 @@ var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i201
 
 $(document).ready(function() {
   $("#backup").click(backup);
-  console.log("2");
+  console.log("3");
   if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
   } else {
@@ -54,7 +54,6 @@ $(document).ready(function() {
         LineString: {coordinates: "x1,y1 0 x2,y2 0 ..."}
       }
       */
-    }
       placemark.forEach(function(place) {
         if (place.Point) {
           $("#output").append(place.Point.coordinates);
