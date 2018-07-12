@@ -55,17 +55,32 @@ $(document).ready(function() {
       }
       */
       placemark.forEach(function(place) {
-        if (place.Point) {
-          $("#output").append(place.Point.coordinates);
-        } else if (place.LineString) {
-          $("#output").append(place.LineString.coordinates);
-        }
+        var coordinates = parseCoordinates(place);
+        $("#output").append(JSON.stringify(coordinates));
       });
     }
 
     reader.readAsText(file);  
   });
 });
+
+function parseCoordinates(place) {
+  
+  if (place.Point) {
+    var coordinatesString = place.Point.coordinates;
+    return [coordinatesString.split(",")];
+  }
+  
+  if (place.LineString) {
+    var coordinatesString = place.LineString.coordinates;
+    var coordinates = coordinatesString.split(",0 ");
+    var start = coordinates[0].split(",");
+    var end = coordinates[coordinates.length-1].split(",");
+    return [start, end];
+  }
+  
+  return null;
+}
 
 var backup = function() {
   window.open(url);
