@@ -65,21 +65,20 @@ $(document).ready(function() {
 });
 
 function parseCoordinates(place) {
+  var coordinatesObj = place.Point || place.LineString;
+  // TODO: maybe need stronger regexp here
+  var coordinates = coordinatesObj.coordinates.split(",0");
   
-  if (place.Point) {
-    var coordinatesString = place.Point.coordinates;
-    return [coordinatesString.split(",")];
-  }
-  
-  if (place.LineString) {
-    var coordinatesString = place.LineString.coordinates;
-    var coordinates = coordinatesString.split(",0 ");
-    var start = coordinates[0].split(",");
-    var end = coordinates[coordinates.length-1].split(",");
-    return [start, end];
-  }
-  
-  return null;
+  // Coordinates can correspond to:
+  // 1. A static point: then we only have start coordinates
+  // 2. A travel: then we extract start and end coordinates (ignore the ones inbetween)
+  var start = coordinates[0].split(",");
+  var end = coordinates.length > 1 ? coordinates[0].split(",") : null;
+
+  return {
+    start: start,
+    end: end
+  };
 }
 
 var backup = function() {
