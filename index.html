@@ -8,7 +8,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script type="text/javascript" src="https://api.pryv.com/lib-javascript/latest/pryv.js"></script>
-  <script src="connector.js"></script>
   <style>
   </style>
 </head>
@@ -27,19 +26,7 @@ $(document).ready(function() {
 });
 
 var backup = function() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.responseType = 'blob';
-
-  xhr.onload = function(e) {
-    console.log(e);
-    if (this.status == 200) {
-      var blob = new Blob([this.response], {type: 'image/png'});
-      
-    }
-  };
-
-  xhr.send();
+  window.open(url);
 }
 
 var onSignIn = function(googleUser) {
