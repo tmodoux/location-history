@@ -17,11 +17,30 @@
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
 <br>
 <a href="#" onclick="signOut();">Sign out</a>
-
+<button id="backup">Backup location history</button>
 <script>
+
+var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
+
 $(document).ready(function() {
-  
+  $("#backup").click(backup);
 });
+
+var backup = function() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'blob';
+
+  xhr.onload = function(e) {
+    console.log(e);
+    if (this.status == 200) {
+      var blob = new Blob([this.response], {type: 'image/png'});
+      
+    }
+  };
+
+  xhr.send();
+}
 
 var onSignIn = function(googleUser) {
   var profile = googleUser.getBasicProfile();
