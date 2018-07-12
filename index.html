@@ -14,12 +14,17 @@
 </head>
 <body>
 <h1>Backup Google location history </h1>
+
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
-<br>
 <a href="#" onclick="signOut();">Sign out</a>
+<br>
 <button id="backup">Backup location history</button>
-<input type="file" id="fileInput">
+<br>
+<input type="file" id="fileInput">Upload location history to the cloud</input>
+
+<br>
 <div id="output"></div>
+
 <script>
 
 var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
