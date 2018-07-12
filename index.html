@@ -33,7 +33,7 @@ $(document).ready(function() {
     alert('The File APIs are not fully supported in this browser.');
   }
   
-  $("#fileInput").addEventListener('change', function(e) {
+  $("#fileInput").on('change', function(e) {
     var file = fileInput.files[0];
     var textType = /text.*/;
     if (file.type.match(textType)) {
