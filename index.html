@@ -36,6 +36,7 @@ $(document).ready(function() {
   $("#fileInput").on('change', function(e) {
     var file = fileInput.files[0];
     var textType = /text.*/;
+    alert(file.type);
     if (file.type.match(textType)) {
       var reader = new FileReader();
 
