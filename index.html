@@ -16,13 +16,14 @@
 <h1>Backup Google location history </h1>
 
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
+<br>
 <a href="#" onclick="signOut();">Sign out</a>
-<br>
+<br><br>
 <button id="backup">Backup location history</button>
-<br>
-<input type="file" id="fileInput">Upload location history to the cloud</input>
+<br><br>
+Upload location history to the cloud: <input type="file" id="fileInput">
 
-<br>
+<br><br>
 <div id="output"></div>
 
 <script>
@@ -31,7 +32,7 @@ var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i201
 
 $(document).ready(function() {
   $("#backup").click(backup);
-  console.log("3");
+
   if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
   } else {
@@ -78,7 +79,7 @@ function parseCoordinates(place) {
   // 1. A static point: then we only have start coordinates
   // 2. A travel: then we extract start and end coordinates (ignore the ones inbetween)
   var start = coordinates[0].split(",");
-  var end = coordinates.length > 1 ? coordinates[0].split(",") : null;
+  var end = coordinates.length > 1 ? coordinates[1].split(",") : null;
 
   return {
     start: start,
