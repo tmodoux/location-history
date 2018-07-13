@@ -213,17 +213,13 @@ var signOut = function() {
 
 var sendToPryv = function() {
   if (pyConnection) {
-    pyConnection.batchCall([
-      {
-        method: 'events.create',
-        params: {
-          streamId: locationStream,
-          type: 'note/txt',
-          content: 'coucou'
-        }
-      }
-    ], function (err, results) {
-      $("#output").html(JSON.stringify(results));
+    pyConnection.events.create({
+      streamId: locationStream,
+      type: 'note/txt',
+      content: 'coucou'
+    }, function (err, eventCreated) { 
+      $("#output").append(JSON.stringify(err));
+      $("#output").append(JSON.stringify(eventCreated));
     });
   } else {
     alert('Login with a Pryv account first!');
