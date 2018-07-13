@@ -122,6 +122,7 @@ function onSignedIn(connection, langCode) {
   var filter = new pryv.Filter({limit : 1});
   pyConnection.events.get(filter, function (err, events) {
     var lastSync = events[0].time;
+    console.log('Last sync: '+lastSync);
     googlePeriod = getGooglePeriod(lastSync);
   });
 }
