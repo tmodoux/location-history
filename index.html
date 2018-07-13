@@ -161,11 +161,15 @@ function parseCoordinates(place) {
 
 function parseTimes(place) {
   var times = place.TimeSpan;
-  // TODO: convert to timestamps
+  // Time format: 2018-02-02T15:06:10.404Z
   return [
     times.begin,
     times.end
-  ]
+  ].map(getTimestamp);
+}
+
+function getTimestamp(dateString) {
+  return new Date(dateString).getTime();
 }
 
 function createLocationEvent(time, coord, desc) {
