@@ -87,10 +87,11 @@ $(document).ready(function() {
         LineString: {coordinates: "x1,y1 0 x2,y2 0 ..."}
       }
       */
+      var batch = [];
       placemark.forEach(function(place) {
-        var batch = placeToPryvBatch(place);
-        $("#output").append(JSON.stringify(batch));
+        batch.push(placeToPryvBatch(place));
       });
+      $("#output").append(JSON.stringify(batch));
     }
 
     reader.readAsText(file);  
