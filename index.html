@@ -40,8 +40,8 @@ var authSettings = {
   requestingAppId: 'google-timeline-backup',
   requestedPermissions: [
     {
-      streamId: locationStream,
-      level: 'contribute',
+      streamId: "*",
+      level: 'manage',
       defaultName: 'Google Timeline'
     }
   ],
@@ -180,8 +180,8 @@ function createLocationEvent(time, coord, desc) {
     description: desc,
     time: time,
     content: {
-      latitude: coord[0],
-      longitude: coord[1]
+      longitude: coord[0],
+      latitude: coord[1]
     }
   };
 }
@@ -214,8 +214,6 @@ var signOut = function() {
 var sendToPryv = function() {
   if (pyConnection) {
     pyConnection.events.create(batch[0].params, function (err, eventCreated) { 
-      $("#output").append(JSON.stringify(err));
-      $("#output").append(JSON.stringify(eventCreated));
     });
   } else {
     alert('Login with a Pryv account first!');
