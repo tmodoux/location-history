@@ -93,7 +93,7 @@ $(document).ready(function() {
       */
       batch = [];
       placemark.map(addPlaceToPryvBatch);
-      $("#output").append(JSON.stringify(batch));
+      $("#output").html(JSON.stringify(batch));
     }
 
     reader.readAsText(file);  
@@ -214,8 +214,7 @@ var signOut = function() {
 var sendToPryv = function() {
   if (pyConnection) {
     pyConnection.batchCall(batch, function (err, results) {
-      if (err) return alert(JSON.stringify(err));
-      alert('OK!');
+      $("#output").html(JSON.stringify(results));
     });
   } else {
     alert('Login with a Pryv account first!');
