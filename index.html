@@ -97,6 +97,17 @@ $(document).ready(function() {
   });
 });
 
+function getSettingsFromURL(url) {
+  var urlInfo = pryv.utility.urls.parseClientURL(url);
+  var queryString = urlInfo.parseQuery();
+  var settings = {
+    username : url ? urlInfo.username : queryString.username,
+    domain: url ? urlInfo.domain: queryString.domain,
+    auth: url ? urlInfo.parseSharingTokens()[0]: queryString.auth
+  };
+  return settings;
+}
+
 function onNeedSignin(popupUrl, pollUrl, pollRateMs) {
 }
 
