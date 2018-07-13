@@ -183,12 +183,14 @@ function getPryvTimestamp (dateString) {
 
 function getGooglePeriod (lastSync) {
   var fromTime = getGoogleTime(lastSync);
+  console.log('Google from time: ', fromtime);
   var toTime = getGoogleTime();
+  console.log('Google to time: ', toTime);
   return 'pb=!1m8!1m3'+fromTime+'!2m3'+toTime;
 }
 
 function getGoogleTime (timestamp) {
-  var date = timestamp ? new Date(timestamp): new Date();
+  var date = timestamp ? new Date(timestamp*1000): new Date();
   var year = date.getFullYear();
   var month = date.getMonth();
   var day = date.getDate();
