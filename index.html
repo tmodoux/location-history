@@ -213,7 +213,7 @@ var signOut = function() {
 
 var sendToPryv = function() {
   if (pyConnection) {
-    pyConnection.events.create(batch, function (err, eventCreated) { 
+    pyConnection.batchCall(batch, function (err, res) { 
     });
   } else {
     alert('Login with a Pryv account first!');
