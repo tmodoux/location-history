@@ -219,7 +219,7 @@ var signOut = function() {
 var sendToPryv = function() {
   if (pyConnection) {
     pyConnection.batchCall(batch, function (err, results) {
-      if (err) return alert(err);
+      if (err) return alert(JSON.stringify(err));
       alert('OK!');
     });
   } else {
