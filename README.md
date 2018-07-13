@@ -1,2 +1,2 @@
 # location-history
-Backup your Google location history
+Backup your Google Timeline

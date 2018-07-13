@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="google-signin-client_id" content="651557588270-a2ko0690vkqho1gk5url4nf0e45v99d6.apps.googleusercontent.com">
-  <title>Backup Google location history</title>
+  <title>Backup Google Timeline</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js" type="text/javascript"></script>
@@ -13,15 +13,16 @@
   </style>
 </head>
 <body>
-<h1>Backup Google location history </h1>
-
+<h1>Backup Google Timeline</h1>
+<span id="pryv-button"></span>
+<br>
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
 <br>
 <a href="#" onclick="signOut();">Sign out</a>
 <br><br>
-<button id="backup">Backup location history</button>
+<button id="backup">Backup Google Timeline</button>
 <br><br>
-Upload location history to the cloud: <input type="file" id="fileInput">
+Upload Google Timeline to the cloud: <input type="file" id="fileInput">
 
 <br><br>
 <div id="output"></div>
@@ -29,9 +30,35 @@ Upload location history to the cloud: <input type="file" id="fileInput">
 <script>
 
 var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
+var settings = getSettingsFromURL();
+var domain = settings.domain || 'pryv.me';
+var registerUrl = 'reg.' + domain;
+var authSettings = {
+  requestingAppId: 'google-timeline-backup',
+  requestedPermissions: [
+    {
+      streamId: 'google-timeline',
+      level: 'contribute',
+      defaultName: 'Google Timeline'
+    }
+  ],
+  returnURL: 'auto#',
+  spanButtonID: 'pryv-button',
+  callbacks: {
+    initialization: function () {},
+    needSignin: onNeedSignin,
+    signedIn: onSignedIn,
+    refused: function (reason) {},
+    error: function (code, message) {}
+  }
+};
+
 
 $(document).ready(function() {
   $("#backup").click(backup);
+  
+  pryv.Auth.config.registerURL = {host: registerUrl, 'ssl': true};
+  pryv.Auth.setup(authSettings);
 
   if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
@@ -70,7 +97,13 @@ $(document).ready(function() {
   });
 });
 
-function parseCoordinates(place) {
+function onNeedSignin(popupUrl, pollUrl, pollRateMs) {
+}
+
+function onSignedIn(connection, langCode) {
+}
+
+function placeToEvents(place) {
   var coordinatesObj = place.Point || place.LineString;
   // TODO: maybe need stronger regexp here
   var coordinates = coordinatesObj.coordinates.split(",0");
@@ -80,12 +113,12 @@ function parseCoordinates(place) {
   //    then we extract start and end coordinates (ignore the ones inbetween)
   // 2. A stay: only one fixed point of coordinates
   //    then we set end coordinates as equal to start
-  var start = coordinates[0].split(",");
-  var end = coordinates[1] === "" ? start: coordinates[1].split(",");
+  var startCoord = coordinates[0].split(",");
+  var endCoord = coordinates[1] === "" ? startCoord: coordinates[1].split(",");
   
   return {
-    start: parseFloatArray(start),
-    end: parseFloatArray(end)
+    startCoord: parseFloatArray(startCoord),
+    endCoord: parseFloatArray(endCoord)
   };
 }
 
