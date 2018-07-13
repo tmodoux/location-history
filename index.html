@@ -23,11 +23,14 @@
 <button id="backup">Backup Google Timeline</button>
 <br><br>
 Upload Google Timeline to the cloud: <input type="file" id="fileInput">
-
+<br><br>
+<button id="submit">Send to Pryv</button>
 <br><br>
 <div id="output"></div>
 
 <script>
+var pyConnection;
+var batch;
 var locationStream = 'google-timeline';
 var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
 var settings = getSettingsFromURL();
@@ -56,7 +59,8 @@ var authSettings = {
 
 $(document).ready(function() {
   $("#backup").click(backup);
-  
+  $("#submit").click(sendToPryv);
+
   pryv.Auth.config.registerURL = {host: registerUrl, 'ssl': true};
   pryv.Auth.setup(authSettings);
 
@@ -87,7 +91,7 @@ $(document).ready(function() {
         LineString: {coordinates: "x1,y1 0 x2,y2 0 ..."}
       }
       */
-      var batch = [];
+      batch = [];
       placemark.forEach(function(place) {
         batch.push(placeToPryvBatch(place));
       });
@@ -110,9 +114,11 @@ function getSettingsFromURL(url) {
 }
 
 function onNeedSignin(popupUrl, pollUrl, pollRateMs) {
+  pyConnection = null;
 }
 
 function onSignedIn(connection, langCode) {
+  pyConnection = connection;
 }
 
 function placeToPryvBatch(place) {
@@ -193,7 +199,7 @@ function parseFloatArray(stringArray) {
 
 var backup = function() {
   window.open(url);
-}
+};
 
 var onSignIn = function(googleUser) {
   var profile = googleUser.getBasicProfile();
@@ -201,14 +207,25 @@ var onSignIn = function(googleUser) {
   console.log('Name: ' + profile.getName());
   console.log('Image URL: ' + profile.getImageUrl());
   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-}
+};
 
 var signOut = function() {
   var auth2 = gapi.auth2.getAuthInstance();
   auth2.signOut().then(function () {
     console.log('User signed out.');
   });
-}
+};
+
+var sendToPryv = function() {
+  if (connection) {
+    connection.batchCall(batch, function (err, results) {
+      if (err) return alert(err);
+      alert('OK!');
+    });
+  } else {
+    alert('Login with a Pryv account first!');
+  }
+};
 </script>
 </body>
 </html>
