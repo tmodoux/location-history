@@ -92,9 +92,7 @@ $(document).ready(function() {
       }
       */
       batch = [];
-      placemark.forEach(function(place) {
-        batch.push(placeToPryvBatch(place));
-      });
+      placemark.map(addPlaceToPryvBatch);
       $("#output").append(JSON.stringify(batch));
     }
 
@@ -121,8 +119,7 @@ function onSignedIn(connection, langCode) {
   pyConnection = connection;
 }
 
-function placeToPryvBatch(place) {
-  var batch = [];
+function addPlaceToPryvBatch(place) {
   var description = 
     'Name: ' + place.name + ' - ' +
     'Address: ' + place.address + ' - ' +
@@ -142,8 +139,6 @@ function placeToPryvBatch(place) {
       params: event
     });
   });
-  
-  return batch;
 }
 
 function parseCoordinates(place) {
