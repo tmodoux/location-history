@@ -169,7 +169,7 @@ function parseTimes(place) {
 }
 
 function getTimestamp(dateString) {
-  return new Date(dateString).getTime();
+  return new Date(dateString).getTime()/1000;
 }
 
 function createLocationEvent(time, coord, desc) {
