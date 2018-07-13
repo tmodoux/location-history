@@ -28,7 +28,7 @@ Upload Google Timeline to the cloud: <input type="file" id="fileInput">
 <div id="output"></div>
 
 <script>
-
+var locationStream = 'google-timeline';
 var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
 var settings = getSettingsFromURL();
 var domain = settings.domain || 'pryv.me';
@@ -37,7 +37,7 @@ var authSettings = {
   requestingAppId: 'google-timeline-backup',
   requestedPermissions: [
     {
-      streamId: 'google-timeline',
+      streamId: locationStream,
       level: 'contribute',
       defaultName: 'Google Timeline'
     }
@@ -88,8 +88,8 @@ $(document).ready(function() {
       }
       */
       placemark.forEach(function(place) {
-        var coordinates = parseCoordinates(place);
-        $("#output").append(JSON.stringify(coordinates));
+        var batch = placeToPryvBatch(place);
+        $("#output").append(JSON.stringify(batch));
       });
     }
 
@@ -103,7 +103,32 @@ function onNeedSignin(popupUrl, pollUrl, pollRateMs) {
 function onSignedIn(connection, langCode) {
 }
 
-function placeToEvents(place) {
+function placeToPryvBatch(place) {
+  var batch = [];
+  var description = 
+    'Name: ' + place.name + ' - ' +
+    'Address: ' + place.address + ' - ' +
+    'Description : ' + place.description;
+  
+  var [startCoord, endCoord] = parseCoordinates(place);
+  var [startTime, endTime] = parseTimes(place);
+  
+  var events = [
+    createLocationEvent(startTime, startCoord, description),
+    createLocationEvent(endTime, endCoord, description)
+  ];
+  
+  events.forEach(function (event) {
+    batch.push({
+      method: 'events.create',
+      params: event
+    });
+  });
+  
+  return batch;
+}
+
+function parseCoordinates(place) {
   var coordinatesObj = place.Point || place.LineString;
   // TODO: maybe need stronger regexp here
   var coordinates = coordinatesObj.coordinates.split(",0");
@@ -116,9 +141,31 @@ function placeToEvents(place) {
   var startCoord = coordinates[0].split(",");
   var endCoord = coordinates[1] === "" ? startCoord: coordinates[1].split(",");
   
+  return [
+    parseFloatArray(startCoord),
+    parseFloatArray(endCoord)
+  ];
+}
+
+function parseTimes(place) {
+  var times = place.TimeSpan;
+  // TODO: convert to timestamps
+  return [
+    times.begin,
+    times.end
+  ]
+}
+
+function createLocationEvent(time, coord, desc) {
   return {
-    startCoord: parseFloatArray(startCoord),
-    endCoord: parseFloatArray(endCoord)
+    streamId: locationStream,
+    type: 'position/wgs84',
+    description: desc,
+    time: time,
+    content: {
+      latitude: coord[0],
+      longitude: coord[1]
+    }
   };
 }
 
