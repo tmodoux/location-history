@@ -32,7 +32,8 @@ Upload Google Timeline to the cloud: <input type="file" id="fileInput">
 var pyConnection;
 var batch;
 var locationStream = 'google-timeline';
-var url = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i2015!2i8!3i2!2m3!1i2015!2i8!3i2";
+var baseURL = "https://www.google.com/maps/timeline/kml?authuser=0";
+var googlePeriod;
 var settings = getSettingsFromURL();
 var domain = settings.domain || 'pryv.me';
 var registerUrl = 'reg.' + domain;
@@ -117,6 +118,12 @@ function onNeedSignin(popupUrl, pollUrl, pollRateMs) {
 
 function onSignedIn(connection, langCode) {
   pyConnection = connection;
+  // Get last sync time
+  var filter = new pryv.Filter({limit : 1});
+  pyConnection.events.get(filter, function (err, events) {
+    var lastSync = events[0].time;
+    getGooglePeriod = getGooglePeriod(lastSync);
+  });
 }
 
 function addPlaceToPryvBatch(place) {
@@ -166,11 +173,25 @@ function parseTimes(place) {
   return [
     times.begin,
     times.end
-  ].map(getTimestamp);
+  ].map(getPryvTimestamp);
 }
 
-function getTimestamp(dateString) {
+function getPryvTimestamp (dateString) {
   return new Date(dateString).getTime()/1000;
+}
+
+function getGooglePeriod (lastSync) {
+  var fromTime = getGoogleTime(lastSync);
+  var toTime = getGoogleTime();
+  return 'pb=!1m8!1m3'+fromTime+'!2m3'+toTime;
+}
+
+function getGoogleTime (timestamp) {
+  var date = new Date(timestamp);
+  var year = date.getFullYear();
+  var month = date.getMonth();
+  var day = date.getDate();
+  return '!1i'+year+'!2i'+month+'!3i'+day;  
 }
 
 function createLocationEvent(time, coord, desc) {
@@ -193,7 +214,7 @@ function parseFloatArray(stringArray) {
 }
 
 var backup = function() {
-  window.open(url);
+  window.open(url+'&'+googlePeriod);
 };
 
 var onSignIn = function(googleUser) {
