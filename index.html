@@ -213,11 +213,7 @@ var signOut = function() {
 
 var sendToPryv = function() {
   if (pyConnection) {
-    pyConnection.events.create({
-      streamId: locationStream,
-      type: 'note/txt',
-      content: 'coucou'
-    }, function (err, eventCreated) { 
+    pyConnection.events.create(batch[0].params, function (err, eventCreated) { 
       $("#output").append(JSON.stringify(err));
       $("#output").append(JSON.stringify(eventCreated));
     });
