@@ -217,8 +217,8 @@ var signOut = function() {
 };
 
 var sendToPryv = function() {
-  if (connection) {
-    connection.batchCall(batch, function (err, results) {
+  if (pyConnection) {
+    pyConnection.batchCall(batch, function (err, results) {
       if (err) return alert(err);
       alert('OK!');
     });
