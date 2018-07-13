@@ -122,8 +122,8 @@ function onSignedIn(connection, langCode) {
   var filter = new pryv.Filter({limit : 1});
   pyConnection.events.get(filter, function (err, events) {
     var lastSync = events[0].time;
-    console.log('Last sync: '+lastSync);
     googlePeriod = getGooglePeriod(lastSync);
+    console.log('Google timeline link: ' + baseURL +'&' + googlePeriod);
   });
 }
 
@@ -183,9 +183,7 @@ function getPryvTimestamp (dateString) {
 
 function getGooglePeriod (lastSync) {
   var fromTime = getGoogleTime(lastSync);
-  console.log('Google from time: ', fromTime);
   var toTime = getGoogleTime();
-  console.log('Google to time: ', toTime);
   return 'pb=!1m8!1m3'+fromTime+'!2m3'+toTime;
 }
 
@@ -217,7 +215,6 @@ function parseFloatArray(stringArray) {
 }
 
 var backup = function() {
-  console.log('Google period: ' + googlePeriod);
   window.open(baseURL+'&'+googlePeriod);
 };
 
