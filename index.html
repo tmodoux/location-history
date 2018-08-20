@@ -142,8 +142,7 @@ function addPlaceToPryvBatch(place) {
   var events = [];
   
   // Start event
-  var startCoord = coordinates[0];
-  events.push(createLocationEvent(startTime, startCoord, description));
+  events.push(createLocationEvent(startTime, coordinates[0], description));
   
   // Inbetween events
   if (coordinates.length > 2) {
@@ -156,9 +155,7 @@ function addPlaceToPryvBatch(place) {
   }
   
   // End event
-  console.log(coordinates[coordinates.length-1]);
-  var endCoord = coordinates[coordinates.length-1] || startCoord;
-  events.push(createLocationEvent(endTime, endCoord, description));
+  events.push(createLocationEvent(endTime, coordinates[coordinates.length-1], description));
   
   events.forEach(function (event) {
     batch.push({
