@@ -93,8 +93,7 @@ $(document).ready(function() {
       }
       */
       batch = [];
-      console.log(placemark);
-      placemark.map(addPlaceToPryvBatch);
+      [].concat(placemark).map(addPlaceToPryvBatch);
       $("#output").html(JSON.stringify(batch));
     }
 
@@ -158,7 +157,6 @@ function addPlaceToPryvBatch(place) {
   
   // End event
   var endCoord = coordinates[coordinates.length-1] || startCoord;
-  console.log(endCoord);
   events.push(createLocationEvent(endTime, endCoord, description));
   
   events.forEach(function (event) {
