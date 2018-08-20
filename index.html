@@ -148,6 +148,7 @@ function addPlaceToPryvBatch(place) {
   // Inbetween events
   if (coordinates.length > 2) {
     var time = startTime;
+    console.log('step', timeStep);
     var timeStep = (endTime-startTime)/(coordinates.length-1);
     for (var i = 1; i<coordinates.length-1; i++) {
       time += timeStep * i;
