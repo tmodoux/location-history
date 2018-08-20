@@ -146,8 +146,10 @@ function addPlaceToPryvBatch(place) {
   if (coordinates.length > 2) {
     var time = times.begin;
     var timeStep = (times.begin-times.end)/(coordinates.length-1);
+    console.log('Timestep', timeStep);
     for (var i = 1; i<coordinates.length-1; i++) {
       time += timeStep * i;
+      console.log('Time', time);
       events.push(createLocationEvent(time, coordinates[i], description));
     }
   }
