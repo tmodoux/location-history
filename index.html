@@ -151,7 +151,7 @@ function addPlaceToPryvBatch(place) {
     var timeStep = (endTime-startTime)/(coordinates.length-1);
     console.log('step', timeStep);
     for (var i = 1; i<coordinates.length-1; i++) {
-      time += timeStep * i;
+      time += timeStep;
       events.push(createLocationEvent(time, coordinates[i], description));
       console.log('kTime',time);
     }
