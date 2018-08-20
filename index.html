@@ -157,10 +157,10 @@ function addPlaceToPryvBatch(place) {
       console.log('Ktime', time);
     }
   }
-  console.log('End', endCoord);
   console.log('Endtime', endTime);
   // End event
   var endCoord = coordinates[coordinates.length-1];
+  console.log('End', endCoord);
   events.push(createLocationEvent(endTime, endCoord || startCoord, description));
   
   events.forEach(function (event) {
