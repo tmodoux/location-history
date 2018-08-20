@@ -140,7 +140,8 @@ function addPlaceToPryvBatch(place) {
   var startTime = getPryvTimestamp(times.begin);
   var endTime = getPryvTimestamp(times.end);
   var events = [];
-  
+  console.log('startTime',startTime);
+
   // Start event
   events.push(createLocationEvent(startTime, coordinates[0], description));
   
@@ -151,12 +152,14 @@ function addPlaceToPryvBatch(place) {
     for (var i = 1; i<coordinates.length-1; i++) {
       time += timeStep * i;
       events.push(createLocationEvent(time, coordinates[i], description));
+      console.log('kTime',time);
     }
   }
   
   // End event
   events.push(createLocationEvent(endTime, coordinates[coordinates.length-1], description));
-  
+  console.log('startTime',endTime);
+
   events.forEach(function (event) {
     batch.push({
       method: 'events.create',
