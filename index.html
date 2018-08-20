@@ -132,14 +132,29 @@ function addPlaceToPryvBatch(place) {
     'Name: ' + place.name + ' - ' +
     'Address: ' + place.address + ' - ' +
     'Description : ' + place.description;
+    
+  var coordinatesObj = place.Point || place.LineString;
+  var coordinates = coordinatesObj.coordinates.split(",0");
+  var times = place.TimeSpan;
+  var events = [];
   
-  var [startCoord, endCoord] = parseCoordinates(place);
-  var [startTime, endTime] = parseTimes(place);
+  // Start event
+  var startCoord = coordinates[0];
+  events.push(createLocationEvent(times.begin, startCoord, description));
   
-  var events = [
-    createLocationEvent(startTime, startCoord, description),
-    createLocationEvent(endTime, endCoord, description)
-  ];
+  // Inbetween events
+  if (coordinates.length > 2) {
+    var time = times.begin;
+    var timeStep = (times.begin-times.end)/(coordinates.length-1);
+    for (var i = 1; i<coordinates.length-1; i++) {
+      time += timeStep * i;
+      events.push(createLocationEvent(time, coordinates[i], description));
+    }
+  }
+  
+  // End event
+  var endCoord = coordinates[1] === "" ? startCoord: coordinates[1];
+  events.push(createLocationEvent(times.end, endCoord, description));
   
   events.forEach(function (event) {
     batch.push({
@@ -147,34 +162,6 @@ function addPlaceToPryvBatch(place) {
       params: event
     });
   });
-}
-
-function parseCoordinates(place) {
-  var coordinatesObj = place.Point || place.LineString;
-  // TODO: maybe need stronger regexp here
-  var coordinates = coordinatesObj.coordinates.split(",0");
-  
-  // Coordinates can correspond to:
-  // 1. A travel: several points of coordinates along the route
-  //    then we extract start and end coordinates (ignore the ones inbetween)
-  // 2. A stay: only one fixed point of coordinates
-  //    then we set end coordinates as equal to start
-  var startCoord = coordinates[0].split(",");
-  var endCoord = coordinates[1] === "" ? startCoord: coordinates[1].split(",");
-  
-  return [
-    parseFloatArray(startCoord),
-    parseFloatArray(endCoord)
-  ];
-}
-
-function parseTimes(place) {
-  var times = place.TimeSpan;
-  // Time format: 2018-02-02T15:06:10.404Z
-  return [
-    times.begin,
-    times.end
-  ].map(getPryvTimestamp);
 }
 
 function getPryvTimestamp (dateString) {
@@ -196,22 +183,17 @@ function getGoogleTime (timestamp) {
 }
 
 function createLocationEvent(time, coord, desc) {
+  var coordinates = coord.split(",");
   return {
     streamId: locationStream,
     type: 'position/wgs84',
     description: desc,
-    time: time,
+    time: getPryvTimestamp(time),
     content: {
-      longitude: coord[0],
-      latitude: coord[1]
+      longitude: parseFloat(coordinates[0]),
+      latitude: parseFloat(coordinates[1])
     }
   };
-}
-
-function parseFloatArray(stringArray) {
-  return stringArray.map(function (stringElem) {
-    return parseFloat(stringElem);
-  })
 }
 
 var backup = function() {
