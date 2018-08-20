@@ -155,8 +155,9 @@ function addPlaceToPryvBatch(place) {
   }
   
   // End event
-  var endCoord = coordinates[coordinates.length-1];
-  events.push(createLocationEvent(endTime, endCoord || startCoord, description));
+  var endCoord = coordinates[coordinates.length-1] || startCoord;
+  console.log(endCoord);
+  events.push(createLocationEvent(endTime, endCoord, description));
   
   events.forEach(function (event) {
     batch.push({
