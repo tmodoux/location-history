@@ -136,16 +136,18 @@ function addPlaceToPryvBatch(place) {
   var coordinatesObj = place.Point || place.LineString;
   var coordinates = coordinatesObj.coordinates.split(",0");
   var times = place.TimeSpan;
+  var startTime = getPryvTimestamp(times.begin);
+  var endTime = getPryvTimestamp(times.end);
   var events = [];
   
   // Start event
   var startCoord = coordinates[0];
-  events.push(createLocationEvent(times.begin, startCoord, description));
+  events.push(createLocationEvent(startTime, startCoord, description));
   
   // Inbetween events
   if (coordinates.length > 2) {
-    var time = times.begin;
-    var timeStep = (times.end-times.begin)/(coordinates.length-1);
+    var time = startTime;
+    var timeStep = (endTime-startTime)/(coordinates.length-1);
     console.log('Timestep', timeStep);
     for (var i = 1; i<coordinates.length-1; i++) {
       time += timeStep * i;
@@ -156,7 +158,7 @@ function addPlaceToPryvBatch(place) {
   
   // End event
   var endCoord = coordinates[1] === "" ? startCoord: coordinates[1];
-  events.push(createLocationEvent(times.end, endCoord, description));
+  events.push(createLocationEvent(endTime, endCoord, description));
   
   events.forEach(function (event) {
     batch.push({
@@ -190,7 +192,7 @@ function createLocationEvent(time, coord, desc) {
     streamId: locationStream,
     type: 'position/wgs84',
     description: desc,
-    time: getPryvTimestamp(time),
+    time: time,
     content: {
       longitude: parseFloat(coordinates[0]),
       latitude: parseFloat(coordinates[1])
