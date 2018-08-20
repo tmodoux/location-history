@@ -93,6 +93,7 @@ $(document).ready(function() {
       }
       */
       batch = [];
+      console.log(placemark);
       placemark.map(addPlaceToPryvBatch);
       $("#output").html(JSON.stringify(batch));
     }
