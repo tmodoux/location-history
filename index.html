@@ -135,6 +135,7 @@ function addPlaceToPryvBatch(place) {
     
   var coordinatesObj = place.Point || place.LineString;
   var coordinates = coordinatesObj.coordinates.split(",0");
+  console.log(coordinates);
   var times = place.TimeSpan;
   var startTime = getPryvTimestamp(times.begin);
   var endTime = getPryvTimestamp(times.end);
@@ -143,8 +144,6 @@ function addPlaceToPryvBatch(place) {
   // Start event
   var startCoord = coordinates[0];
   events.push(createLocationEvent(startTime, startCoord, description));
-  console.log('Start', startCoord);
-  console.log('Starttime', startTime);
   
   // Inbetween events
   if (coordinates.length > 2) {
@@ -153,14 +152,11 @@ function addPlaceToPryvBatch(place) {
     for (var i = 1; i<coordinates.length-1; i++) {
       time += timeStep * i;
       events.push(createLocationEvent(time, coordinates[i], description));
-      console.log('Kcoord', coordinates[i]);
-      console.log('Ktime', time);
     }
   }
-  console.log('Endtime', endTime);
+  
   // End event
   var endCoord = coordinates[coordinates.length-1];
-  console.log('End', endCoord);
   events.push(createLocationEvent(endTime, endCoord || startCoord, description));
   
   events.forEach(function (event) {
