@@ -134,8 +134,7 @@ function addPlaceToPryvBatch(place) {
     'Description : ' + place.description;
     
   var coordinatesObj = place.Point || place.LineString;
-  var coordinates = coordinatesObj.coordinates.split(",0");
-  console.log(coordinates);
+  var coordinates = coordinatesObj.coordinates.split(",0").pop();
   var times = place.TimeSpan;
   var startTime = getPryvTimestamp(times.begin);
   var endTime = getPryvTimestamp(times.end);
